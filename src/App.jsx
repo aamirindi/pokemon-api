@@ -22,8 +22,8 @@ export default function Header() {
   });
 
   const searchPokemon = () => {
-    // const lowercasePokemonName = pokemonName.toLowerCase();
-    Axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`).then(
+    const lowercasePokemonName = pokemonName.toLowerCase();
+    Axios.get(`https://pokeapi.co/api/v2/pokemon/${lowercasePokemonName}`).then(
       (response) => {
         // console.log(response);
         setPokemon({
