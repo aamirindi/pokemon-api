@@ -4,6 +4,8 @@ import "./style/App.css";
 import SearchIcon from "@mui/icons-material/Search";
 import { useState } from "react";
 import Axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Header() {
   const [pokemonName, setPokemonName] = useState("");
@@ -23,9 +25,8 @@ export default function Header() {
 
   const searchPokemon = () => {
     const lowercasePokemonName = pokemonName.toLowerCase();
-    Axios.get(`https://pokeapi.co/api/v2/pokemon/${lowercasePokemonName}`).then(
-      (response) => {
-        // console.log(response);
+    Axios.get(`https://pokeapi.co/api/v2/pokemon/${lowercasePokemonName}`)
+      .then((response) => {
         setPokemon({
           name: response.data.species.name,
           img: response.data.sprites.front_default,
@@ -39,12 +40,36 @@ export default function Header() {
         });
         setPokemonChosen(true);
         setPokemonName("");
-      }
-    );
+      })
+      .catch((error) => {
+        console.error("Error fetching Pokemon:", error);
+        toast.error("Please enter the correct Pokemon name", {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      });
   };
 
   return (
     <>
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <div className="header">
         <div className="logo-img">
           <img src={logo} />
@@ -54,10 +79,11 @@ export default function Header() {
             onChange={(e) => {
               setPokemonName(e.target.value);
             }}
+            value={pokemonName}
             className="input"
             id="outlined-basic"
             label="Search your Pokemon"
-            // variant="outlined"
+            variant="outlined"
           />
           <button onClick={searchPokemon}>
             <SearchIcon />
